@@ -5,6 +5,12 @@ The readout is used in a water meter measurement system. An overview can be foun
 
 
 
+
+#### 14.0.0 Current Version - (2021-10-12)
+
+* Replaced old data of watermeters and replaced with my gas meter, check model `dig_bk_v3.tflite`
+
+
 #### 13.1.0 Current Version (2021-10-06)
 
 * New images (minor change)
@@ -17,8 +23,6 @@ The readout is used in a water meter measurement system. An overview can be foun
 
 - Currently no licence published - copyright belongs to author
 - If you are interested in a commercial usage or dedicated versions please contact the developer
-
-
 
 #### 13.0.0 Current Version - (2021-09-12)
 
