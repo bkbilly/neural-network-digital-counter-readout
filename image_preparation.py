@@ -2,7 +2,7 @@ import glob
 import os
 from PIL import Image
 
-Input_dir = '/home/bkbilly/Downloads/gas_images'
+Input_dir = 'ziffer_sortiert_raw'
 Output_dir = 'ziffer_sortiert_resize'
 
 target_size_x = 20

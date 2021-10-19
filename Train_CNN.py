@@ -38,10 +38,39 @@ val_loss_ges = np.array([])
 np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True)
 
-# Load training data
-Input_dir = 'ziffer_sortiert_resize'
+# Resize images
+Input_dir = 'ziffer_sortiert_raw'
+Output_dir = 'ziffer_sortiert_resize'
+
+target_size_x = 20
+target_size_y = 32
+
+if not os.path.isdir(Output_dir):
+    os.mkdir(Output_dir)
+files = glob.glob(Output_dir + '/*.jpg')
+i = 0
+for f in files:
+    os.remove(f)
+    i = i + 1
+print(str(i) + " files have been deleted.")
+
 
 files = glob.glob(Input_dir + '/*.jpg')
+for aktfile in files:
+    print(aktfile)
+    test_image = Image.open(aktfile)
+    test_image = test_image.resize(
+        (target_size_x, target_size_y),
+        Image.NEAREST)
+    base = os.path.basename(aktfile)
+    save_name = Output_dir + '/' + base
+    test_image.save(save_name, "JPEG")
+
+
+# Load training data
+Resized_dir = 'ziffer_sortiert_resize'
+
+files = glob.glob(Resized_dir + '/*.jpg')
 x_data = []
 y_data = []
 
@@ -170,12 +199,12 @@ if Show_Plots:
 
 
 # Check each image for expected and deviation
-Input_dir = 'ziffer_sortiert_resize'
+Resized_dir = 'ziffer_sortiert_resize'
 res = []
 only_deviation = True
 show_wrong_image = True
 
-files = glob.glob(Input_dir + '/*.jpg')
+files = glob.glob(Resized_dir + '/*.jpg')
 
 for aktfile in files:
     base = os.path.basename(aktfile)
@@ -223,3 +252,4 @@ FileName = TFliteNamingAndVersion + "_v" + str(Model_Version)
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 open(FileName + ".tflite", "wb").write(tflite_model)
+print(f"Saved model as {FileName}.tflite")
