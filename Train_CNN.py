@@ -1,31 +1,34 @@
-########### Basic Parameters for Running: ################################
-
-TFliteNamingAndVersion = "dig_bk"     # Used for tflite Filename
-Training_Percentage = 0.0             # 0.0 = Use all Images for Training
-Epoch_Anz = 150
-Model_Version = 0
-Show_Plots = False
-
-##########################################################################
-
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import glob
-import os
 import numpy as np
 from sklearn.utils import shuffle
 from tensorflow.python import keras
 from tensorflow.python.keras import Sequential
-from tensorflow.python.keras.layers import Dense, InputLayer, Conv2D, MaxPool2D, Flatten, BatchNormalization
+from tensorflow.python.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, BatchNormalization
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.callbacks import History
 from tensorflow.keras.utils import to_categorical
 from PIL import Image
 from pathlib import Path
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
+
+
+
+# ########## Basic Parameters for Running: ###############################
+
+TFliteNamingAndVersion = "dig_bk"     # Used for tflite Filename
+Training_Percentage = 0.95            # 0.0 = Use all Images for Training
+Model_Version = 2                     # Params: 0=324631, 1=190487, 2=88023, 3=53719
+Epoch_Anz = 150
+Show_Plots = False
+show_wrong_image = True
+
+# ########################################################################
+
 
 config = ConfigProto()
 config.gpu_options.allow_growth = True
@@ -55,9 +58,9 @@ for f in files:
 print(str(i) + " files have been deleted.")
 
 
-files = glob.glob(Input_dir + '/*.jpg')
+files = Path(Input_dir).rglob('*.jpg')
 for aktfile in files:
-    print(aktfile)
+    # print(aktfile)
     test_image = Image.open(aktfile)
     test_image = test_image.resize(
         (target_size_x, target_size_y),
@@ -202,7 +205,6 @@ if Show_Plots:
 Resized_dir = 'ziffer_sortiert_resize'
 res = []
 only_deviation = True
-show_wrong_image = True
 
 files = glob.glob(Resized_dir + '/*.jpg')
 
@@ -228,9 +230,12 @@ for aktfile in files:
         if str(classes) != str(expected_class):
             print(aktfile + " " + str(expected_class) + " " + str(classes))
             if show_wrong_image == True:
-                display(image_in)
+                # display(image_in)
+                plt.title(f"{base} recognized as {classes}")
+                plt.imshow(image_in)
+                plt.show()
     else:
-        print(aktfile + " " + aktsubdir + " " + str(classes))
+        print(aktfile + " " + expected_class + " " + str(classes))
 
 
 res = np.asarray(res)
